@@ -1,45 +1,51 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10**6)
 
+N, M, V = map(int, sys.stdin.readline().split())
 
-def dfs(start):
-    visited[start] = True
-    print(start, end=" ")
-
-    for i in graph[start]:
-        if not visited[i]:
-            dfs(i)
-
-
-def bfs(start):
-    queue = deque([start])
-    visited[start] = True
-    while queue:
-
-        v = queue.popleft()
-        print(v, end=" ")
-        for i in graph[v]:
-            if not visited[i]:
-                visited[i] = True
-                queue.append(i)
-
-
-N, M, V = map(int, input().split())
-graph = [[] for _ in range(N + 1)]
-
+Q = [[] for _ in range(N+1)]
+visited = set()
 for _ in range(M):
-    a, b = map(int, input().split())
-    graph[a].append(b)
-    graph[b].append(a)
+    u, v = map(int, sys.stdin.readline().split())
+    Q[u].append(v)
+    Q[v].append(u)
 
-# 정렬
-for i in graph:
+for i in Q:
     i.sort()
 
-# dfs
-visited = [False] * (N + 1)
-dfs(V)
-print()
 
-# bfs
-visited = [False] * (N + 1)
+dfs_path = []
+bfs_path = []
+
+def dfs(node):
+    dfs_path.append(node)
+    visited.add(node)
+    for i in Q[node]:
+        if i not in visited:
+            visited.add(i)
+            dfs(i)
+
+def bfs(node):
+    queue = [node]
+    visited.add(node)
+    while queue:
+        node = queue.pop(0)
+        bfs_path.append(node)
+        for i in Q[node]:
+            if i not in visited:
+                queue.append(i)
+                visited.add(i)
+
+
+
+
+
+dfs(V)
+for i in range(len(dfs_path)):
+    print(dfs_path[i], end=' ')
+
+print()
+visited.clear()
 bfs(V)
+for i in range(len(bfs_path)):
+    print(bfs_path[i], end=' ')
