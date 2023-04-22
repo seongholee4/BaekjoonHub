@@ -10,9 +10,11 @@ for _ in range(M):
     Q[u].append(v)
     Q[v].append(u)
 
-for i in Q:
-    i.sort()
+for i in range(N+1):
+    Q[i].sort()
 
+# for i in Q:
+#     print(i)
 
 dfs_path = []
 bfs_path = []
@@ -36,10 +38,6 @@ def bfs(node):
                 queue.append(i)
                 visited.add(i)
 
-
-
-
-
 dfs(V)
 for i in range(len(dfs_path)):
     print(dfs_path[i], end=' ')
@@ -49,3 +47,16 @@ visited.clear()
 bfs(V)
 for i in range(len(bfs_path)):
     print(bfs_path[i], end=' ')
+
+# counter example: elements in each list are not sorted properly
+'''
+6 5 6
+5 4
+4 6
+2 3
+3 1
+1 6
+----
+6 1 3 2 4 5
+6 1 4 3 5 2
+'''
