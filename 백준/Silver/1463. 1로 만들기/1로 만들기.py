@@ -1,5 +1,12 @@
 import sys
-sys.setrecursionlimit(10**9)
+N = int(sys.stdin.readline().strip())
+
+# I want to make N to be 1 using one of the three options:
+# 1. N-1
+# 2. N/2 if N is even
+# 3. N/3 if N is;/p; divisible by 3
+# I want to make N to be 1 using the minimum number of operations
+
 # given N, generate possible operations:
 # e.g. if 10 then this can be either 9 or 5 after one operation
 
@@ -11,34 +18,31 @@ sys.setrecursionlimit(10**9)
         # if 4 then this can be either 3 or 2 after one operation
         # if 2 then this can be either 1 or 1 after one operation
         # ...
+# technically, find all paths to 1 and find the shortest path
 
-# DP memorization list
-# Initialize default values
-N = int(input())
-DP = [-1 for _ in range(N+1)]
-DP[0] = 0
-DP[1] = 0
+def x_possibleOperations(node, visited):
+    ret = []
+    if not visited[node - 1]:
+        ret.append(node-1)
+    if node % 2 == 0:
+        ret.append(node // 2)
+    if node % 3 == 0:
+        ret.append(node // 3)
+    return ret
 
-def make_1(n):
-    if DP[n] != -1:
-        return DP[n]
-    
-    options = [make_1(n-1)]
-    if n % 2 == 0:
-        options.append(make_1(n//2))
-    if n % 3 == 0:
-        options.append(make_1(n//3))
+def bfs(queue, visited):
+    while queue:
+        node = queue.pop(0)
+        if node == 1:
+            break
+        for i in x_possibleOperations(node, visited):
+            if not visited[i]:
+                queue.append(i)
+                visited[i] = visited[node]+1
+                # print(visited)
 
-    DP[n] = min(options) + 1
-    return DP[n]
-'''
-if N = 4
-then DP[4] = min(DP[3], DP[2], DP[3]) + 1
-DP[3] = 1
-DP[2] = 1
-'''
+queue = [N]
+visited = [0 for _ in range(N+1)]
+bfs(queue, visited)
 
-for i in range(2, N+1):
-    make_1(i)
-
-print(make_1(N))
+print(visited[1])
